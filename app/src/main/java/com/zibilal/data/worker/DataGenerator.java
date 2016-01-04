@@ -1,6 +1,9 @@
 package com.zibilal.data.worker;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.ContentProviderOperation;
+import android.content.ContentProviderResult;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -102,9 +105,14 @@ public class DataGenerator {
     private void saveContacts(Context context, int index, ContactModel contactModel) {
         ArrayList<ContentProviderOperation> ops = new ArrayList<>();
 
+        Account[] accounts = AccountManager.get(context).getAccounts();
+        for (Account acc : accounts){
+            Log.d("Data Generator", "account name = " + acc.name + ", type = " + acc.type);
+        }
+
         ops.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
-        .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
-        .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null).build());
+        .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, accounts[0].type)
+        .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, accounts[0].name).build());
         ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
         .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, index)
         .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
@@ -123,7 +131,11 @@ public class DataGenerator {
 
         ContentResolver contactAdder = context.getContentResolver();
         try {
-            contactAdder.applyBatch(ContactsContract.AUTHORITY, ops);
+            ContentProviderResult[] r =  contactAdder.applyBatch(ContactsContract.AUTHORITY, ops);
+            Log.d("DataGenerator", "Content result: " + r.length);
+            if (r == null || r.length == 0) {
+                Log.d("DataGenerator" , "Insertion is failed");
+            }
         } catch (RemoteException e) {
             e.printStackTrace();
         } catch (OperationApplicationException e) {

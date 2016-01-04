@@ -126,12 +126,14 @@ public class MainActivity extends AppCompatActivity {
             int permissionCheckReadExternalStorage = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
             int permissionCheckReadContact = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS);
             int permissionCheckWriteContact = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CONTACTS);
+            int permissionCheckGetAccounts = ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS);
             if (permissionCheckReadExternalStorage == PackageManager.PERMISSION_GRANTED &&
                     permissionCheckReadContact == PackageManager.PERMISSION_GRANTED &&
-                    permissionCheckWriteContact == PackageManager.PERMISSION_GRANTED) {
+                    permissionCheckWriteContact == PackageManager.PERMISSION_GRANTED &&
+                    permissionCheckGetAccounts == PackageManager.PERMISSION_GRANTED) {
                 DataGenerator.getInstance().generateContactAndSave(MainActivity.this.getApplicationContext(), "contacts_name.txt", mSubscriber);
             } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS},
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS, Manifest.permission.GET_ACCOUNTS},
                         REQUEST_READ_EXTERNAL_STORAGE_PERMISSION);
             }
         } else {
@@ -191,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case REQUEST_READ_EXTERNAL_STORAGE_PERMISSION:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED && grantResults[3] == PackageManager.PERMISSION_GRANTED) {
                     DataGenerator.getInstance().generateContactAndSave(MainActivity.this.getApplicationContext(),"contacts_name.txt", mSubscriber);
                 }
         }
