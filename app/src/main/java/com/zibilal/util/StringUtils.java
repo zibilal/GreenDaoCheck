@@ -16,4 +16,15 @@ public class StringUtils {
         }
         return sb.toString();
     }
+
+    public static String getNumberString(int len) {
+        String SALTCHARS="1234567890";
+        StringBuilder sb = new StringBuilder();
+        Random rnd = new Random();
+        while(sb.length() < len) {
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            sb.append(SALTCHARS.charAt(index));
+        }
+        return sb.toString();
+    }
 }

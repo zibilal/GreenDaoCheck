@@ -18,13 +18,27 @@
         android:text="Hello World!"
         android:id="@+id/text_view"
         style="?android:textAppearanceLarge"/>
-
-    <Button
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Heavy Lifting"
-        android:id="@+id/heavy_lifting_button"
+        android:id="@+id/button_layout"
         android:layout_below="@+id/text_view"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="46dp" />
+        android:layout_marginTop="36dp">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Heavy Lifting"
+            android:id="@+id/heavy_lifting_button" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="File save"
+            android:id="@+id/file_save" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Generate Contacts"
+            android:id="@+id/gen_contacts"/>
+    </LinearLayout>
 </RelativeLayout>
