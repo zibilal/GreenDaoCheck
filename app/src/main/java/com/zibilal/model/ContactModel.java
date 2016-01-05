@@ -16,13 +16,14 @@ public class ContactModel implements IDataAdapter {
     public Integer ContactId;
     public Long DeviceContactId;
     public Date CreateDate;
-    public String EmailAddres;
+    public String EmailAddress;
     public String PhoneNumber;
+    public String CompanyName;
 
     public ContactModel(){}
 
     @Override
     public String toString() {
-        return DisplayName + ", " + EmailAddres + ", " + PhoneNumber;
+        return DisplayName + ", " + EmailAddress + ", " + PhoneNumber + ", " + CompanyName;
     }
 }

@@ -26,18 +26,21 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="36dp">
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Heavy Lifting"
+            android:layout_weight="2"
+            android:text="Delete All Contacts"
             android:id="@+id/heavy_lifting_button" />
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="2"
             android:text="File save"
             android:id="@+id/file_save" />
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="2"
             android:text="Generate Contacts"
             android:id="@+id/gen_contacts"/>
     </LinearLayout>

@@ -1,6 +1,7 @@
 package com.zibilal.greendaocheck;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,15 +37,30 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG=MainActivity.class.getSimpleName();
     private static final int REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION=112;
     private static final int REQUEST_READ_EXTERNAL_STORAGE_PERMISSION=113;
+
+    private ProgressDialog mProgressDialog;
     private String mMessage="";
     @Bind(R.id.text_view)
     TextView mTextView;
     @OnClick(R.id.heavy_lifting_button) void onHeavyLiftingButtonClick() {
-        String msg = "start: " + new Date().toString();
-        mTextView.setText(msg);
-        heavyLiftingFunction();
-        msg = "end: " + new Date().toString();
-        mTextView.setText(msg);
+        mProgressDialog = ProgressDialog.show(MainActivity.this, "Delete Contacts", "Deleting...", true, true);
+        DataGenerator.getInstance().deleteAllContacts(this.getApplicationContext(), new Subscriber<Integer>() {
+            @Override
+            public void onCompleted() {
+                mProgressDialog.dismiss();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mProgressDialog.dismiss();
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                mProgressDialog.dismiss();
+                Toast.makeText(MainActivity.this, "All contacts is deleted.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @OnClick(R.id.file_save) void onFileSaveClick() {
@@ -107,17 +123,20 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onCompleted() {
             Toast.makeText(MainActivity.this, "Generator completed", Toast.LENGTH_SHORT).show();
+            mProgressDialog.dismiss();
         }
 
         @Override
         public void onError(Throwable e) {
             e.printStackTrace();
             Toast.makeText(MainActivity.this, "Exception is occured: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            mProgressDialog.dismiss();
         }
 
         @Override
         public void onNext(List<ContactModel> contactModels) {
             Toast.makeText(MainActivity.this, "Generated data size: " + contactModels.size(), Toast.LENGTH_SHORT).show();
+            mProgressDialog.dismiss();
         }
     };
 
@@ -131,13 +150,15 @@ public class MainActivity extends AppCompatActivity {
                     permissionCheckReadContact == PackageManager.PERMISSION_GRANTED &&
                     permissionCheckWriteContact == PackageManager.PERMISSION_GRANTED &&
                     permissionCheckGetAccounts == PackageManager.PERMISSION_GRANTED) {
-                DataGenerator.getInstance().generateContactAndSave(MainActivity.this.getApplicationContext(), "contacts_name.txt", mSubscriber);
+                mProgressDialog = ProgressDialog.show(MainActivity.this, "Generate Contacts", "Generating...", true, true);
+                DataGenerator.getInstance().generateContactAndSave(MainActivity.this.getApplicationContext(), "contacts_name.txt", "companies_name.txt", mSubscriber);
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS, Manifest.permission.GET_ACCOUNTS},
                         REQUEST_READ_EXTERNAL_STORAGE_PERMISSION);
             }
         } else {
-            DataGenerator.getInstance().generateContactAndSave(MainActivity.this.getApplicationContext(),"contacts_name.txt", mSubscriber);
+            mProgressDialog = ProgressDialog.show(MainActivity.this, "Generate Contacts", "Generating...", true, true);
+            DataGenerator.getInstance().generateContactAndSave(MainActivity.this.getApplicationContext(),"contacts_name.txt", "companies_name.txt", mSubscriber);
         }
     }
 
@@ -194,7 +215,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case REQUEST_READ_EXTERNAL_STORAGE_PERMISSION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED && grantResults[3] == PackageManager.PERMISSION_GRANTED) {
-                    DataGenerator.getInstance().generateContactAndSave(MainActivity.this.getApplicationContext(),"contacts_name.txt", mSubscriber);
+                    mProgressDialog = ProgressDialog.show(MainActivity.this, "Generate Contacts", "Generating...", true, true);
+                    DataGenerator.getInstance().generateContactAndSave(MainActivity.this.getApplicationContext(),"contacts_name.txt", "companies_name.txt", mSubscriber);
                 }
         }
     }
@@ -210,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show());
+                .setAction("Action", null).show());
     }
 
     private void heavyLiftingFunction() {

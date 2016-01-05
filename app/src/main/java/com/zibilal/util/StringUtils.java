@@ -27,4 +27,15 @@ public class StringUtils {
         }
         return sb.toString();
     }
+
+    public static int getRandomInt(int len) {
+        Random rnd = new Random();
+        return rnd.nextInt(len);
+    }
+
+    public static void main(String[] args) {
+        for (int i=0; i < 100; i++) {
+            System.out.println("Number : "  + StringUtils.getRandomInt(15) );
+        }
+    }
 }
